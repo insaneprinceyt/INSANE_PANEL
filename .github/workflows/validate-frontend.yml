@@ -1,0 +1,28 @@
+name: Validate frontend build
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'resources/**'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'webpack.config.js'
+      - '.github/workflows/validate-frontend.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build frontend
+        run: yarn build:production
